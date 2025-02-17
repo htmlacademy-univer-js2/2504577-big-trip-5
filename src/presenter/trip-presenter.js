@@ -1,9 +1,9 @@
-import { render } from "../render";
-import EventCreateView from "../view/event-create-view";
-import EventEditView from "../view/event-edit-view";
-import EventListView from "../view/event-list-view";
-import EventView from "../view/event-view";
-import TripSortView from "../view/trip-sort-view";
+import { render } from '../render';
+import EventCreateView from '../view/event-create-view';
+import EventEditView from '../view/event-edit-view';
+import EventListView from '../view/event-list-view';
+import EventView from '../view/event-view';
+import TripSortView from '../view/trip-sort-view';
 
 export default class TripPresenter {
   eventListComponent = new EventListView();

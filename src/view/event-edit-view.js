@@ -1,10 +1,10 @@
-import { createElement } from "../render";
+import { createElement } from '../render';
 
-const TYPES_EVENT = ["taxi", "bus", "train", "ship", "drive", "flight", "check-in", "sightseeing", "restaurant"];
+const TYPES_EVENT = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
-function createTypeEventTemplate(type, checked=false) {
-  return (`<div class="event__type-item">
-            <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${checked ? "checked" : ""}>
+function createTypeEventTemplate(type, checked = false) {
+  return (`<div class='event__type-item'>
+            <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${checked ? 'checked' : ''}>
             <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type.charAt(0).toUpperCase() + type.slice(1)}</label>
           </div>`);
 }
@@ -23,7 +23,7 @@ function createEventEditTemplate() {
                     <div class="event__type-list">
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
-                        ${TYPES_EVENT.map((type) => (type === "flight" ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join("")}
+                        ${TYPES_EVENT.map((type) => (type === 'flight' ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('')}
                       </fieldset>
                     </div>
                   </div>
