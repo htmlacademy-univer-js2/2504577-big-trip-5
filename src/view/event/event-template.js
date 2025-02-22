@@ -1,5 +1,3 @@
-import { createElement } from '../render';
-
 function createEventTemplate() {
   return (`<li class="trip-events__item">
           <div class="event">
@@ -40,20 +38,4 @@ function createEventTemplate() {
           </li>`);
 }
 
-export default class EventView {
-  getTemplate() {
-    return createEventTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
-}
+export {createEventTemplate};

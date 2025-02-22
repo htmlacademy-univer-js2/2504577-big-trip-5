@@ -1,11 +1,10 @@
-import { createElement } from '../render';
-
-const TYPES_EVENT = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+import { capitalize } from '../../utils';
+import { TYPES_EVENT } from '../../const';
 
 function createTypeEventTemplate(type, checked = false) {
   return (`<div class='event__type-item'>
             <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${checked ? 'checked' : ''}>
-            <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type.charAt(0).toUpperCase() + type.slice(1)}</label>
+            <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalize(type)}</label>
           </div>`);
 }
 
@@ -123,20 +122,5 @@ function createEventEditTemplate() {
             </li>`);
 }
 
-export default class EventEditView {
-  getTemplate() {
-    return createEventEditTemplate();
-  }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
-}
+export {createEventEditTemplate};
