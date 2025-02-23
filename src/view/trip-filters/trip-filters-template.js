@@ -1,5 +1,3 @@
-import { createElement } from '../render';
-
 const TYPES_FILTER = ['everything', 'future', 'present', 'past'];
 
 function createFiltersItemTemplate(filter, checked = false) {
@@ -16,20 +14,5 @@ function createTripFiltersTemplate() {
           </form>`);
 }
 
-export default class TripFiltersView {
-  getTemplate() {
-    return createTripFiltersTemplate();
-  }
 
-  getElement() {
-    if (!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
-}
+export {createTripFiltersTemplate};
