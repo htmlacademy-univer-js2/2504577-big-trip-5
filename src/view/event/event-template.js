@@ -1,4 +1,4 @@
-import { formatDateDifference, getFormattedDate, getFormattedDateTime, getFormattedMonthDay, getFormattedTime } from '../../utils';
+import { formatDateDifference, getFormattedDate, getFormattedDateTime, getFormattedMonthDay, getFormattedTime } from '../../utils/date-time';
 
 
 function createEventOfferTemplate(title, price) {

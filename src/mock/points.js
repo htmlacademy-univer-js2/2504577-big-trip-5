@@ -1,4 +1,4 @@
-const destinations = [
+const mockDestinations = [
   {
     id: '1',
     name: 'Chamonix',
@@ -46,7 +46,7 @@ const destinations = [
   }
 ];
 
-const offers = [
+const mockOffers = [
   {
     type: 'taxi',
     offers: [
@@ -124,4 +124,4 @@ const mockPoints = [
   }
 ];
 
-export {destinations, offers, mockPoints};
+export {mockDestinations as destinations, mockOffers as offers, mockPoints};
