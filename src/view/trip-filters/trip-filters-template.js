@@ -1,4 +1,9 @@
-const TYPES_FILTER = ['everything', 'future', 'present', 'past'];
+const TYPES_FILTER = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+};
 
 function createFiltersItemTemplate(filter, checked = false) {
   return (`<div class="trip-filters__filter">
@@ -9,7 +14,7 @@ function createFiltersItemTemplate(filter, checked = false) {
 
 function createTripFiltersTemplate() {
   return (`<form class="trip-filters" action="#" method="get">
-            ${TYPES_FILTER.map((filter) => (filter === 'everything' ? createFiltersItemTemplate(filter, true) : createFiltersItemTemplate(filter))).join('')}
+            ${Object.values(TYPES_FILTER).map((filter) => (filter === 'everything' ? createFiltersItemTemplate(filter, true) : createFiltersItemTemplate(filter))).join('')}
             <button class="visually-hidden" type="submit">Accept filter</button>
           </form>`);
 }

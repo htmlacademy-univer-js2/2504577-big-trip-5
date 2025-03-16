@@ -1,5 +1,5 @@
 import { TYPES_EVENT } from '../../const';
-import { capitalize } from '../../utils';
+import { capitalize } from '../../utils/common';
 
 function createTypeEventTemplate(type, checked = false) {
   return (`<div class="event__type-item">
@@ -40,7 +40,7 @@ function createEventCreateTemplate(destinations, offers) {
                     <div class="event__type-list">
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
-                        ${TYPES_EVENT.map((type) => (type === 'flight' ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('')}
+                        ${Object.values(TYPES_EVENT).map((type) => (type === 'flight' ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('')}
                       </fieldset>
                     </div>
                   </div>
