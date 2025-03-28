@@ -2,14 +2,6 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
-function capitalize(str){
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function reverseString(str) {
-  return str.split('').reverse().join('');
-}
-
 function formatDateDifference(startDate, endDate) {
   const start = dayjs(startDate);
   const end = dayjs(endDate);
@@ -40,6 +32,4 @@ const getFormattedMonthDay = (dateStr) => (dayjs(dateStr).format('MMM DD').toUpp
 const getFormattedDateTime = (dateStr) => (dayjs(dateStr).format('YYYY-MM-DDTHH:mm'));
 const getFormattedTime = (dateStr) => (dayjs(dateStr).format('HH:mm'));
 
-export {capitalize, reverseString, formatDateDifference, getFormattedDate, getFormattedDateTime, getFormattedMonthDay, getFormattedTime};
-
-
+export {formatDateDifference, getFormattedDate, getFormattedDateTime, getFormattedMonthDay, getFormattedTime};

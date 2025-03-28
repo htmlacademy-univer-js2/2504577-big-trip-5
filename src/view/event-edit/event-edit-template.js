@@ -1,4 +1,5 @@
-import { capitalize, getFormattedDate, getFormattedTime } from '../../utils';
+import { capitalize } from '../../utils/common';
+import { getFormattedDate, getFormattedTime } from '../../utils/date-time';
 import { TYPES_EVENT } from '../../const';
 
 function createTypeEventTemplate(type, checked = false) {
@@ -45,7 +46,7 @@ function createEventEditTemplate(point, destinations, offers) {
                     <div class="event__type-list">
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
-                        ${TYPES_EVENT.map((type) => (type === typeEvent ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('')}
+                        ${Object.values(TYPES_EVENT).map((type) => (type === typeEvent ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('')}
                       </fieldset>
                     </div>
                   </div>

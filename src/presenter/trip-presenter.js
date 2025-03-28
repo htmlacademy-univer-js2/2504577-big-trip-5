@@ -1,9 +1,10 @@
-import { render } from '../render';
+import { render, replace } from '../framework/render';
 import EventCreateView from '../view/event-create/event-create-view';
 import EventEditView from '../view/event-edit/event-edit-view';
 import EventListView from '../view/event-list/event-list-view';
 import EventView from '../view/event/event-view';
 import TripSortView from '../view/trip-sort/trip-sort-view';
+import { TYPES_EVENT } from '../const';
 
 export default class TripPresenter {
   eventListComponent = new EventListView();
@@ -11,40 +12,57 @@ export default class TripPresenter {
   constructor({tripContainerElement, pointsModel}) {
     this.tripContainerElement = tripContainerElement;
     this.pointsModel = pointsModel;
-    this.routePointObjects = this.pointsModel.getPoints();
+    this.routePointObjects = this.pointsModel.pointObjects;
   }
 
   getEventCreateView() {
-    const defaultType = 'flight';
-    const offers = this.pointsModel.getOffersByType(defaultType);
-    const destinations = this.pointsModel.getDestinations();
+    const defaultType = TYPES_EVENT.FLIGHT;
+    const offers = this.pointsModel.getOfferObjectsByType(defaultType);
+    const destinations = this.pointsModel.destinationObjects;
     const eventCreateView = new EventCreateView({destinations: destinations, offers: offers});
     return eventCreateView;
   }
 
-  getEventEditView(pointObject) {
-    const destinations = this.pointsModel.getDestinations();
-    const offers = this.pointsModel.getOffersByType(pointObject.type);
-    const eventEditView = new EventEditView({point: pointObject, destinations: destinations, offers: offers});
-    return eventEditView;
-  }
+  #renderEvent(pointObject) {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceEditToView();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
 
-  getEventView(pointObject) {
-    const destination = this.pointsModel.getDestinationById(pointObject.destination);
-    const offers = this.pointsModel.getOffersByType(pointObject.type);
-    const eventView = new EventView({point: pointObject, destination: destination, offers: offers});
-    return eventView;
+    const destination = this.pointsModel.getDestinationObjectsById(pointObject.destination);
+    const destinations = this.pointsModel.destinationObjects;
+    const offers = this.pointsModel.getOfferObjectsByType(pointObject.type);
+
+    const eventView = new EventView({point: pointObject, destination: destination, offers: offers, onEditClick: () => {
+      replaceViewToEdit();
+      document.addEventListener('keydown', escKeyDownHandler);
+    }});
+
+    const eventEditView = new EventEditView({point: pointObject, destinations: destinations, offers: offers, onFormSubmit: () => {
+      replaceEditToView();
+      document.removeEventListener('keydown', escKeyDownHandler);
+    }});
+
+    function replaceViewToEdit() {
+      replace(eventEditView, eventView);
+    }
+
+    function replaceEditToView() {
+      replace(eventView, eventEditView);
+    }
+
+    render(eventView, this.eventListComponent.element);
   }
 
   render() {
     render(new TripSortView(), this.tripContainerElement);
     render(this.eventListComponent, this.tripContainerElement);
-    // render(new EventEditView(), this.eventListComponent.getElement());
-    render(this.getEventEditView(this.routePointObjects[0]), this.eventListComponent.getElement());
-    render(this.getEventCreateView(), this.eventListComponent.getElement());
 
-    for (let i = 1; i < this.routePointObjects.length; i++) {
-      render(this.getEventView(this.routePointObjects[i]), this.eventListComponent.getElement());
+    for (let i = 0; i < this.routePointObjects.length; i++) {
+      this.#renderEvent(this.routePointObjects[i]);
     }
   }
 }

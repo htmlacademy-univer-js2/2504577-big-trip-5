@@ -1,26 +1,24 @@
-import { createElement } from '../../render';
+import AbstractView from '../../framework/view/abstract-view';
 import { createEventEditTemplate } from './event-edit-template';
 
-export default class EventEditView {
-  constructor({point, destinations, offers}) {
+export default class EventEditView extends AbstractView {
+  constructor({point, destinations, offers, onFormSubmit}) {
+    super();
     this.point = point;
     this.destinations = destinations;
     this.offers = offers;
+    this.handleFormSubmit = onFormSubmit;
+
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
   }
 
-  getTemplate() {
+  get template() {
     return createEventEditTemplate(this.point, this.destinations, this.offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.handleFormSubmit();
+  };
 }

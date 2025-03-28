@@ -1,6 +1,6 @@
 import PointsModel from './model/points-model';
 import TripPresenter from './presenter/trip-presenter';
-import { render } from './render';
+import { render } from './framework/render';
 import TripFiltersView from './view/trip-filters/trip-filters-view';
 
 const filtersElement = document.querySelector('.trip-controls__filters');
@@ -10,4 +10,3 @@ const tripPresenter = new TripPresenter({ tripContainerElement: tripEventsElemen
 
 render(new TripFiltersView(), filtersElement);
 tripPresenter.render();
-
