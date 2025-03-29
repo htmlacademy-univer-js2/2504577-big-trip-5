@@ -4,6 +4,7 @@ import EventEditView from '../view/event-edit/event-edit-view';
 import EventListView from '../view/event-list/event-list-view';
 import EventView from '../view/event/event-view';
 import TripSortView from '../view/trip-sort/trip-sort-view';
+import EmptyRouteMsgView from '../view/empty-route-msg/empty-route-message-view';
 import { TYPES_EVENT } from '../const';
 
 export default class TripPresenter {
@@ -24,10 +25,12 @@ export default class TripPresenter {
   }
 
   #renderEvent(pointObject) {
+    const componentNames = {eventView: 'eventView', eventEditView: 'eventEditView'};
+
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
-        replaceEditToView();
+        switchViewAndEdit(componentNames.eventView);
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
@@ -37,21 +40,29 @@ export default class TripPresenter {
     const offers = this.pointsModel.getOfferObjectsByType(pointObject.type);
 
     const eventView = new EventView({point: pointObject, destination: destination, offers: offers, onEditClick: () => {
-      replaceViewToEdit();
+      switchViewAndEdit(componentNames.eventEditView);
       document.addEventListener('keydown', escKeyDownHandler);
     }});
 
-    const eventEditView = new EventEditView({point: pointObject, destinations: destinations, offers: offers, onFormSubmit: () => {
-      replaceEditToView();
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }});
+    const eventEditView = new EventEditView({point: pointObject, destinations: destinations, offers: offers,
+      onFormSubmit: () => {
+        switchViewAndEdit(componentNames.eventView);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
+      onFormClose: () => {
+        switchViewAndEdit(componentNames.eventView);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }});
 
-    function replaceViewToEdit() {
-      replace(eventEditView, eventView);
-    }
-
-    function replaceEditToView() {
-      replace(eventView, eventEditView);
+    function switchViewAndEdit(targetComponent) {
+      switch (targetComponent) {
+        case componentNames.eventView:
+          replace(eventView, eventEditView);
+          break;
+        case componentNames.eventEditView:
+          replace(eventEditView, eventView);
+          break;
+      }
     }
 
     render(eventView, this.eventListComponent.element);
@@ -60,6 +71,10 @@ export default class TripPresenter {
   render() {
     render(new TripSortView(), this.tripContainerElement);
     render(this.eventListComponent, this.tripContainerElement);
+
+    if (this.routePointObjects.length === 0) {
+      render(new EmptyRouteMsgView(), this.tripContainerElement);
+    }
 
     for (let i = 0; i < this.routePointObjects.length; i++) {
       this.#renderEvent(this.routePointObjects[i]);
