@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+
 const mockDestinations = [
   {
     id: '1',
@@ -89,7 +91,7 @@ const mockOffers = [
   }
 ];
 
-const mockPoints = [
+const mockEvents = [
   {
     type: 'flight',
     basePrice: '160',
@@ -124,4 +126,12 @@ const mockPoints = [
   }
 ];
 
-export {mockDestinations as destinations, mockOffers as offers, mockPoints};
+function getEvents() {
+  return mockEvents.map((event) => ({
+    id: nanoid(),
+    ...event,
+    isFavorite: false
+  }));
+}
+
+export {mockDestinations, mockOffers, getEvents};

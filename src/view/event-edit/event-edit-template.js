@@ -3,8 +3,9 @@ import { getFormattedDate, getFormattedTime } from '../../utils/date-time';
 import { TYPES_EVENT } from '../../const';
 
 function createTypeEventTemplate(type, checked = false) {
+  const isChecked = checked ? 'checked' : '';
   return (`<div class='event__type-item'>
-            <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${checked ? 'checked' : ''}>
+            <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${isChecked}>
             <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalize(type)}</label>
           </div>`);
 }
@@ -15,8 +16,9 @@ function createDataListOptionTemplate(name) {
 
 function createOfferSelectorTemplate(title, price, checked = false) {
   const alias = title.split(' ').pop();
+  const isChecked = checked ? 'checked' : '';
   return (`<div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${alias}-1" type="checkbox" name="event-offer-${alias}" ${checked ? 'checked' : ''}>
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${alias}-1" type="checkbox" name="event-offer-${alias}" ${isChecked}>
             <label class="event__offer-label" for="event-offer-${alias}-1">
               <span class="event__offer-title">${title}</span>
               &plus;&euro;&nbsp;
@@ -33,6 +35,11 @@ function createEventEditTemplate(point, destinations, offers) {
   const eventStartDateTime = `${getFormattedDate(dateFrom, 'DD/MM/YYYY')} ${getFormattedTime(dateFrom)}`;
   const eventFinishDateTime = `${getFormattedDate(dateTo, 'DD/MM/YYYY')} ${getFormattedTime(dateTo)}`;
 
+  const typeEventTemplate = Object.values(TYPES_EVENT).map((type) => (type === typeEvent ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('');
+  const dataListOptionTemplate = destinations.map(({name}) => (createDataListOptionTemplate(name))).join('');
+  const offerSelectorTemplate = availableOffers.map(({id, title, price}) => (selectedOffers.includes(id) ? createOfferSelectorTemplate(title, price, true) : createOfferSelectorTemplate(title, price)));
+  const picturesTemplate = pictures.map(({src, description}) => (`<img class="event__photo" src="${src}" alt="${description}">`));
+
   return (`<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
                 <header class="event__header">
@@ -46,7 +53,7 @@ function createEventEditTemplate(point, destinations, offers) {
                     <div class="event__type-list">
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
-                        ${Object.values(TYPES_EVENT).map((type) => (type === typeEvent ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('')}
+                        ${typeEventTemplate}
                       </fieldset>
                     </div>
                   </div>
@@ -57,7 +64,7 @@ function createEventEditTemplate(point, destinations, offers) {
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${nameDestination}" list="destination-list-1">
                     <datalist id="destination-list-1">
-                      ${destinations.map(({name}) => (createDataListOptionTemplate(name))).join('')}
+                      ${dataListOptionTemplate}
                     </datalist>
                   </div>
 
@@ -88,7 +95,7 @@ function createEventEditTemplate(point, destinations, offers) {
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
                     <div class="event__available-offers">
-                      ${availableOffers.map(({id, title, price}) => (selectedOffers.includes(id) ? createOfferSelectorTemplate(title, price, true) : createOfferSelectorTemplate(title, price)))}
+                      ${offerSelectorTemplate}
                     </div>
                   </section>
 
@@ -98,7 +105,7 @@ function createEventEditTemplate(point, destinations, offers) {
 
                     <div class="event__photos-container">
                       <div class="event__photos-tape">
-                        ${pictures.map(({src, description}) => (`<img class="event__photo" src="${src}" alt="${description}">`))}
+                        ${picturesTemplate}
                       </div>
                     </div>
                   </section>

@@ -6,4 +6,8 @@ function reverseString(str) {
   return str.split('').reverse().join('');
 }
 
-export {capitalize, reverseString};
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
+export {capitalize, reverseString, updateItem};
