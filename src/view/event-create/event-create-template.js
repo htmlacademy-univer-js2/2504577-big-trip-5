@@ -2,8 +2,9 @@ import { TYPES_EVENT } from '../../const';
 import { capitalize } from '../../utils/common';
 
 function createTypeEventTemplate(type, checked = false) {
+  const isChecked = checked ? 'checked' : '';
   return (`<div class="event__type-item">
-            <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${checked ? 'checked' : ''}>
+            <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${isChecked}>
             <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalize(type)}</label>
           </div>`);
 }
@@ -26,6 +27,9 @@ function createOfferSelectorTemplate(title, price) {
 
 function createEventCreateTemplate(destinations, offers) {
   const {offers: availableOffers} = offers;
+  const typeEventTemplate = Object.values(TYPES_EVENT).map((type) => (type === 'flight' ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('');
+  const dataListOptionTemplate = destinations.map(({name}) => (createDataListOptionTemplate(name))).join('');
+  const offerSelectorTemplate = availableOffers.map(({title, price}) => (createOfferSelectorTemplate(title, price))).join('');
 
   return (`<li class="trip-events__item">
               <form class="event event--edit" action="#" method="post">
@@ -40,7 +44,7 @@ function createEventCreateTemplate(destinations, offers) {
                     <div class="event__type-list">
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
-                        ${Object.values(TYPES_EVENT).map((type) => (type === 'flight' ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('')}
+                        ${typeEventTemplate}
                       </fieldset>
                     </div>
                   </div>
@@ -51,7 +55,7 @@ function createEventCreateTemplate(destinations, offers) {
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" list="destination-list-1">
                     <datalist id="destination-list-1">
-                      ${destinations.map(({name}) => (createDataListOptionTemplate(name))).join('')}
+                      ${dataListOptionTemplate}
                     </datalist>
                   </div>
 
@@ -79,7 +83,7 @@ function createEventCreateTemplate(destinations, offers) {
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
                     <div class="event__available-offers">
-                      ${availableOffers.map(({title, price}) => (createOfferSelectorTemplate(title, price))).join('')}
+                      ${offerSelectorTemplate}
                     </div>
                   </section>
                 </section>
