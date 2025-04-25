@@ -10,7 +10,7 @@ const Mode = {
 };
 
 export default class EventPresenter {
-  #componentNames = {eventView: 'eventView', eventEditView: 'eventEditView'};
+  #componentNames = { eventView: 'eventView', eventEditView: 'eventEditView' };
   #eventListContainer = null;
   #eventsModel = null;
 
@@ -23,7 +23,7 @@ export default class EventPresenter {
   #eventObject = null;
   #mode = Mode.DEFAULT;
 
-  constructor({eventListContainer, eventsModel, onModeChange, onDataChange}) {
+  constructor({ eventListContainer, eventsModel, onModeChange, onDataChange }) {
     this.#eventListContainer = eventListContainer;
     this.#eventsModel = eventsModel;
     this.#handleModeChange = onModeChange;
@@ -36,24 +36,29 @@ export default class EventPresenter {
     const prevEventView = this.#eventView;
     const prevEventEditView = this.#eventEditView;
 
-    const destination = this.#eventsModel.getDestinationObjectById(this.#eventObject.destination);
+    const destination = this.#eventsModel.getDestinationObjectById(
+      this.#eventObject.destination
+    );
     const destinations = this.#eventsModel.destinationObjects;
-    const offers = this.#eventsModel.getOfferObjectsByType(this.#eventObject.type);
+    const offersByType = this.#eventsModel.getOfferObjectsByType(
+      this.#eventObject.type
+    );
+    const offers = this.#eventsModel.offerObjects;
 
     this.#eventView = new EventView({
-      point: this.#eventObject,
+      event: this.#eventObject,
       destination: destination,
-      offers: offers,
+      offers: offersByType,
       onEditClick: this.#handleEditClick,
-      onFavoriteClick: this.#handleFavoriteClick
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#eventEditView = new EventEditView({
-      point: this.#eventObject,
+      event: this.#eventObject,
       destinations: destinations,
       offers: offers,
       onFormSubmit: this.#handleEditFormSubmit,
-      onFormClose: this.#handleEditFormClose
+      onFormClose: this.#handleEditFormClose,
     });
 
     if (prevEventView === null || prevEventEditView === null) {
@@ -77,7 +82,10 @@ export default class EventPresenter {
     const defaultType = TYPES_EVENT.FLIGHT;
     const offers = this.pointsModel.getOfferObjectsByType(defaultType);
     const destinations = this.pointsModel.destinationObjects;
-    const eventCreateView = new EventCreateView({destinations: destinations, offers: offers});
+    const eventCreateView = new EventCreateView({
+      destinations: destinations,
+      offers: offers,
+    });
     return eventCreateView;
   }
 
@@ -90,11 +98,14 @@ export default class EventPresenter {
   #switchViewAndEdit(targetComponent) {
     switch (targetComponent) {
       case this.#componentNames.eventView:
+        this.#eventEditView.reset(this.#eventObject);
         replace(this.#eventView, this.#eventEditView);
+        document.removeEventListener('keydown', this.#escKeyDownHandler);
         this.#mode = Mode.DEFAULT;
         break;
       case this.#componentNames.eventEditView:
         replace(this.#eventEditView, this.#eventView);
+        document.addEventListener('keydown', this.#escKeyDownHandler);
         this.#handleModeChange();
         this.#mode = Mode.EDITING;
         break;
@@ -110,21 +121,21 @@ export default class EventPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#eventObject, isFavorite: !this.#eventObject.isFavorite});
+    this.#handleDataChange({
+      ...this.#eventObject,
+      isFavorite: !this.#eventObject.isFavorite,
+    });
   };
 
   #handleEditClick = () => {
     this.#switchViewAndEdit(this.#componentNames.eventEditView);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
   };
 
   #handleEditFormSubmit = () => {
     this.#switchViewAndEdit(this.#componentNames.eventView);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
   #handleEditFormClose = () => {
     this.#switchViewAndEdit(this.#componentNames.eventView);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 }

@@ -2,9 +2,9 @@ import AbstractView from '../../framework/view/abstract-view';
 import { createEventTemplate } from './event-template';
 
 export default class EventView extends AbstractView {
-  constructor({point, destination, offers, onEditClick, onFavoriteClick}) {
+  constructor({event, destination, offers, onEditClick, onFavoriteClick}) {
     super();
-    this.point = point;
+    this.point = event;
     this.destination = destination;
     this.offers = offers;
     this.handleEditClick = onEditClick;
