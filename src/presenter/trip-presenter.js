@@ -4,10 +4,14 @@ import TripSortView from '../view/trip-sort/trip-sort-view';
 import EmptyRouteMsgView from '../view/empty-route-msg/empty-route-message-view';
 import EventPresenter from './event-presenter';
 import { updateItem } from '../utils/common';
+import { sortEventByDuration, sortEventByPrice, sortEventByStartTime } from '../utils/date-time';
+import { SortType } from '../const';
 
 export default class TripPresenter {
   #eventListComponent = new EventListView();
   #eventPresenters = new Map();
+  #sortComponent = null;
+  #currentSortType = SortType.DAY;
 
   #eventObjects = [];
 
@@ -21,6 +25,10 @@ export default class TripPresenter {
     this.#renderTripEvents();
   }
 
+  get events() {
+    return this.eventsModel.eventObjects;
+  }
+
   #renderEvent(eventObject) {
     const eventPresenter = new EventPresenter({
       eventListContainer: this.#eventListComponent.element,
@@ -32,6 +40,30 @@ export default class TripPresenter {
     this.#eventPresenters.set(eventObject.id, eventPresenter);
   }
 
+  #sortEvents(sortType) {
+    switch (sortType) {
+      case SortType.PRICE:
+        this.#eventObjects.sort(sortEventByPrice);
+        break;
+      case SortType.DURATION:
+        this.#eventObjects.sort(sortEventByDuration);
+        break;
+      default:
+        this.#eventObjects.sort(sortEventByStartTime);
+    }
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType == sortType) {
+      return;
+    }
+
+    this.#sortEvents(sortType);
+    this.#clearEventList();
+    this.#renderEventList();
+  };
+
   #handleModeChange = () => {
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
@@ -40,6 +72,11 @@ export default class TripPresenter {
     this.#eventObjects = updateItem(this.#eventObjects, updatedEvent);
     this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
   };
+
+  #clearEventList() {
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
+  }
 
   #renderEventList() {
     render(this.#eventListComponent, this.tripContainerElement);
@@ -51,7 +88,10 @@ export default class TripPresenter {
   }
 
   #renderTripSort() {
-    render(new TripSortView(), this.tripContainerElement);
+    this.#sortComponent = new TripSortView({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+    render(this.#sortComponent, this.tripContainerElement);
   }
 
   #renderTripEvents() {

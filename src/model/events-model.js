@@ -1,8 +1,9 @@
 import { getEvents } from '../mock/events';
 import { mockDestinations } from '../mock/events';
 import { mockOffers } from '../mock/events';
+import Observable from '../framework/observable.js'
 
-export default class EventsModel {
+export default class EventsModel extends Observable {
   #eventObjects = getEvents();
   #destinationObjects = [...mockDestinations];
   #offerObjects = [...mockOffers];

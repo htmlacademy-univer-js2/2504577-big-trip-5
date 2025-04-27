@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
 function formatDateDifference(startDate, endDate) {
@@ -16,14 +16,14 @@ function formatDateDifference(startDate, endDate) {
   if (days > 0) {
     result.push(`${days}D`);
   }
-  if (hours > 0){
+  if (hours > 0) {
     result.push(`${hours}H`);
   }
-  if (minutes > 0){
+  if (minutes > 0) {
     result.push(`${minutes}M`);
   }
 
-  return result.join(' ');
+  return result.join(" ");
 }
 
 function isEventInFuture(dateTimeEvent) {
@@ -35,13 +35,45 @@ function isEventInPast(dateTimeEvent) {
 }
 
 function isEventInPresent(startDateTimeEvent, finishDateTimeEvent) {
-  return dayjs(startDateTimeEvent).isBefore(dayjs()) && dayjs(finishDateTimeEvent).isAfter(dayjs());
+  return (
+    dayjs(startDateTimeEvent).isBefore(dayjs()) &&
+    dayjs(finishDateTimeEvent).isAfter(dayjs())
+  );
 }
 
+function sortEventByStartTime(eventA, eventB) {
+  return dayjs(eventA.dateFrom).diff(dayjs(eventB.dateFrom));
+}
 
-const getFormattedDate = (dateStr, format = 'YYYY-MM-DD') => (dayjs(dateStr).format(format));
-const getFormattedMonthDay = (dateStr) => (dayjs(dateStr).format('MMM DD').toUpperCase());
-const getFormattedDateTime = (dateStr) => (dayjs(dateStr).format('YYYY-MM-DDTHH:mm'));
-const getFormattedTime = (dateStr) => (dayjs(dateStr).format('HH:mm'));
+function sortEventByDuration(eventA, eventB) {
+  return (
+    dayjs.duration(dayjs(eventB.dateTo).diff(dayjs(eventB.dateFrom))) -
+    dayjs.duration(dayjs(eventA.dateTo).diff(dayjs(eventA.dateFrom)))
+  );
+}
 
-export {isEventInFuture, isEventInPast, isEventInPresent, formatDateDifference, getFormattedDate, getFormattedDateTime, getFormattedMonthDay, getFormattedTime};
+function sortEventByPrice(eventA, eventB) {
+  return Number(eventB.basePrice) - Number(eventA.basePrice);
+}
+
+const getFormattedDate = (dateStr, format = "YYYY-MM-DD") =>
+  dayjs(dateStr).format(format);
+const getFormattedMonthDay = (dateStr) =>
+  dayjs(dateStr).format("MMM DD").toUpperCase();
+const getFormattedDateTime = (dateStr) =>
+  dayjs(dateStr).format("YYYY-MM-DDTHH:mm");
+const getFormattedTime = (dateStr) => dayjs(dateStr).format("HH:mm");
+
+export {
+  sortEventByDuration,
+  sortEventByPrice,
+  sortEventByStartTime,
+  isEventInFuture,
+  isEventInPast,
+  isEventInPresent,
+  formatDateDifference,
+  getFormattedDate,
+  getFormattedDateTime,
+  getFormattedMonthDay,
+  getFormattedTime,
+};

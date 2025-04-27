@@ -78,6 +78,11 @@ export default class EventPresenter {
     remove(prevEventEditView);
   }
 
+  destroy() {
+    remove(this.#eventView);
+    remove(this.#eventEditView);
+  }
+
   #getEventCreateView() {
     const defaultType = TYPES_EVENT.FLIGHT;
     const offers = this.pointsModel.getOfferObjectsByType(defaultType);

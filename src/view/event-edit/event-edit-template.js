@@ -28,14 +28,14 @@ function createOfferSelectorTemplate(title, price, checked = false) {
 }
 
 function createEventEditTemplate(point, destinations, offers) {
-  const {newType, newDestination, dateFrom, dateTo, basePrice, offers: selectedOffers} = point;
-  const {name: nameDestination, description: descriptionDestination, pictures} = destinations.find((dest) => (dest.id === newDestination));
-  const {offers: availableOffers} = offers.find((offer) => (offer.type === newType));
+  const {type: pointType, destination: pointDestination, dateFrom, dateTo, basePrice, offers: selectedOffers} = point;
+  const {name: nameDestination, description: descriptionDestination, pictures} = destinations.find((dest) => (dest.id === pointDestination));
+  const {offers: availableOffers} = offers.find((offer) => (offer.type === pointType));
 
   const eventStartDateTime = `${getFormattedDate(dateFrom, 'DD/MM/YYYY')} ${getFormattedTime(dateFrom)}`;
   const eventFinishDateTime = `${getFormattedDate(dateTo, 'DD/MM/YYYY')} ${getFormattedTime(dateTo)}`;
 
-  const typeEventTemplate = Object.values(TYPES_EVENT).map((type) => (type === newType ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('');
+  const typeEventTemplate = Object.values(TYPES_EVENT).map((type) => (type === pointType ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('');
   const dataListOptionTemplate = destinations.map(({name}) => (createDataListOptionTemplate(name))).join('');
   const offerSelectorTemplate = availableOffers.map(({id, title, price}) => (selectedOffers.includes(id) ? createOfferSelectorTemplate(title, price, true) : createOfferSelectorTemplate(title, price))).join('');
   const picturesTemplate = pictures.map(({src, description}) => (`<img class="event__photo" src="${src}" alt="${description}">`)).join('');
@@ -46,7 +46,7 @@ function createEventEditTemplate(point, destinations, offers) {
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-1">
                       <span class="visually-hidden">Choose event type</span>
-                      <img class="event__type-icon" width="17" height="17" src="img/icons/${newType}.png" alt="Event type icon">
+                      <img class="event__type-icon" width="17" height="17" src="img/icons/${pointType}.png" alt="Event type icon">
                     </label>
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -60,7 +60,7 @@ function createEventEditTemplate(point, destinations, offers) {
 
                   <div class="event__field-group  event__field-group--destination">
                     <label class="event__label  event__type-output" for="event-destination-1">
-                      ${newType}
+                      ${pointType}
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${nameDestination}" list="destination-list-1">
                     <datalist id="destination-list-1">

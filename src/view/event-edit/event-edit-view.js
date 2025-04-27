@@ -54,7 +54,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #changeTypeEventHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({ newType: evt.target.value });
+    this.updateElement({ type: evt.target.value });
   };
 
   #eventDestinationChangeHandler = (evt) => {
@@ -63,7 +63,7 @@ export default class EventEditView extends AbstractStatefulView {
       (dest) => dest.name === evt.target.value
     );
     if (foundedDest) {
-      this.updateElement({ newDestination: foundedDest.id });
+      this.updateElement({ destination: foundedDest.id });
     }
   };
 
@@ -111,6 +111,6 @@ export default class EventEditView extends AbstractStatefulView {
   }
 
   static parsePointToState(event) {
-    return { ...event, newType: event.type, newDestination: event.destination };
+    return { ...event };
   }
 }
