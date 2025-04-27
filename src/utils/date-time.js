@@ -35,7 +35,7 @@ function isEventInPast(dateTimeEvent) {
 }
 
 function isEventInPresent(startDateTimeEvent, finishDateTimeEvent) {
-  return (dayjs(startDateTimeEvent).isBefore(dayjs()) || dayjs(startDateTimeEvent).isBefore(dayjs())) && dayjs(finishDateTimeEvent).isAfter(dayjs());
+  return dayjs(startDateTimeEvent).isBefore(dayjs()) && dayjs(finishDateTimeEvent).isAfter(dayjs());
 }
 
 
@@ -44,4 +44,4 @@ const getFormattedMonthDay = (dateStr) => (dayjs(dateStr).format('MMM DD').toUpp
 const getFormattedDateTime = (dateStr) => (dayjs(dateStr).format('YYYY-MM-DDTHH:mm'));
 const getFormattedTime = (dateStr) => (dayjs(dateStr).format('HH:mm'));
 
-export {isEventInFuture, isEventInPast, isEventInPresent, formatDateDifference, getFormattedDate, getFormattedDateTime, getFormattedMonthDay, getFormattedTime};
+export {formatDateDifference, getFormattedDate, getFormattedDateTime, getFormattedMonthDay, getFormattedTime};
