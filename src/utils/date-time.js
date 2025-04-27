@@ -44,4 +44,4 @@ const getFormattedMonthDay = (dateStr) => (dayjs(dateStr).format('MMM DD').toUpp
 const getFormattedDateTime = (dateStr) => (dayjs(dateStr).format('YYYY-MM-DDTHH:mm'));
 const getFormattedTime = (dateStr) => (dayjs(dateStr).format('HH:mm'));
 
-export {formatDateDifference, getFormattedDate, getFormattedDateTime, getFormattedMonthDay, getFormattedTime};
+export {isEventInFuture, isEventInPast, isEventInPresent, formatDateDifference, getFormattedDate, getFormattedDateTime, getFormattedMonthDay, getFormattedTime};

@@ -26,7 +26,7 @@ export default class EventEditView extends AbstractStatefulView {
       .addEventListener('click', this.#formCloseHandler);
     this.element
       .querySelector('.event__type-group')
-      .addEventListener('change', this.#changeTypeEventHandler)
+      .addEventListener('change', this.#changeTypeEventHandler);
     this.element
       .querySelector('.event__input--destination')
       .addEventListener('input', this.#eventDestinationChangeHandler);
