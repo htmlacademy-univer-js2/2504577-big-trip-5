@@ -1,7 +1,6 @@
 import AbstractStatefulView from '../../framework/view/abstract-stateful-view';
 import { createEventEditTemplate } from './event-edit-template';
 import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
 
 export default class EventEditView extends AbstractStatefulView {
   #startDateTimePicker = null;
@@ -26,10 +25,8 @@ export default class EventEditView extends AbstractStatefulView {
       .querySelector('.event__rollup-btn')
       .addEventListener('click', this.#formCloseHandler);
     this.element
-      .querySelectorAll('.event__type-input')
-      .forEach((input) =>
-        input.addEventListener('click', this.#changeTypeEventHandler)
-      );
+      .querySelector('.event__type-group')
+      .addEventListener('change', this.#changeTypeEventHandler);
     this.element
       .querySelector('.event__input--destination')
       .addEventListener('input', this.#eventDestinationChangeHandler);
@@ -104,6 +101,7 @@ export default class EventEditView extends AbstractStatefulView {
     this.#finishDateTimePicker = flatpickr(
       this.element.querySelector('input[name=\'event-end-time\']'),
       {
+        minDate: this._state.dateFrom,
         enableTime: true,
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._state.dateTo,

@@ -35,7 +35,7 @@ function isEventInPast(dateTimeEvent) {
 }
 
 function isEventInPresent(startDateTimeEvent, finishDateTimeEvent) {
-  return (dayjs(startDateTimeEvent).isBefore(dayjs()) || dayjs(startDateTimeEvent).isBefore(dayjs())) && dayjs(finishDateTimeEvent).isAfter(dayjs());
+  return dayjs(startDateTimeEvent).isBefore(dayjs()) && dayjs(finishDateTimeEvent).isAfter(dayjs());
 }
 
 
