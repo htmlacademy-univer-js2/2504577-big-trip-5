@@ -1,13 +1,14 @@
-function createEmptyRouteMsgTemplate() {
-  return (`<p class="trip-events__msg">Click New Event to create your first point</p>
+import { TYPES_FILTER } from '../../const';
 
-          <!--
-            Значение отображаемого текста зависит от выбранного фильтра:
-              * Everthing – 'Click New Event to create your first point'
-              * Past — 'There are no past events now';
-              * Present — 'There are no present events now';
-              * Future — 'There are no future events now'.
-          -->`);
+const msg = {
+  [TYPES_FILTER.EVERYTHING]: 'Click New Event to create your first point',
+  [TYPES_FILTER.FUTURE]: 'There are no future events now',
+  [TYPES_FILTER.PAST]: 'There are no past events now',
+  [TYPES_FILTER.PRESENT]: 'There are no present events now',
+};
+
+function createEmptyRouteMsgTemplate(filterType) {
+  return `<p class='trip-events__msg'>${msg[filterType]}</p>`;
 }
 
-export {createEmptyRouteMsgTemplate};
+export { createEmptyRouteMsgTemplate };
