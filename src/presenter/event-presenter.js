@@ -1,8 +1,7 @@
 import { remove, render, replace } from '../framework/render';
 import EventEditView from '../view/event-edit/event-edit-view';
 import EventView from '../view/event/event-view';
-import EventCreateView from '../view/event-create/event-create-view';
-import { TYPES_EVENT } from '../const';
+import { UserAction, UpdateType } from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -19,6 +18,7 @@ export default class EventPresenter {
 
   #eventView = null;
   #eventEditView = null;
+  #eventCreateView = null;
 
   #eventObject = null;
   #mode = Mode.DEFAULT;
@@ -32,7 +32,6 @@ export default class EventPresenter {
 
   init(eventObject) {
     this.#eventObject = eventObject;
-
     const prevEventView = this.#eventView;
     const prevEventEditView = this.#eventEditView;
 
@@ -59,6 +58,7 @@ export default class EventPresenter {
       offers: offers,
       onFormSubmit: this.#handleEditFormSubmit,
       onFormClose: this.#handleEditFormClose,
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     if (prevEventView === null || prevEventEditView === null) {
@@ -81,17 +81,6 @@ export default class EventPresenter {
   destroy() {
     remove(this.#eventView);
     remove(this.#eventEditView);
-  }
-
-  #getEventCreateView() {
-    const defaultType = TYPES_EVENT.FLIGHT;
-    const offers = this.pointsModel.getOfferObjectsByType(defaultType);
-    const destinations = this.pointsModel.destinationObjects;
-    const eventCreateView = new EventCreateView({
-      destinations: destinations,
-      offers: offers,
-    });
-    return eventCreateView;
   }
 
   resetView() {
@@ -126,17 +115,22 @@ export default class EventPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({
+    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, {
       ...this.#eventObject,
       isFavorite: !this.#eventObject.isFavorite,
     });
+  };
+
+  #handleDeleteClick = (event) => {
+    this.#handleDataChange(UserAction.DELETE_POINT, UpdateType.MINOR, event);
   };
 
   #handleEditClick = () => {
     this.#switchViewAndEdit(this.#componentNames.eventEditView);
   };
 
-  #handleEditFormSubmit = () => {
+  #handleEditFormSubmit = (event) => {
+    this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, event);
     this.#switchViewAndEdit(this.#componentNames.eventView);
   };
 
