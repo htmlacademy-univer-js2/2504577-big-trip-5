@@ -18,7 +18,6 @@ export default class EventPresenter {
 
   #eventView = null;
   #eventEditView = null;
-  #eventCreateView = null;
 
   #eventObject = null;
   #mode = Mode.DEFAULT;

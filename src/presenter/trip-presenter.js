@@ -1,7 +1,8 @@
-import { render, remove } from '../framework/render';
+import { render, remove, RenderPosition } from '../framework/render';
 import EventListView from '../view/event-list/event-list-view';
 import TripSortView from '../view/trip-sort/trip-sort-view';
 import EmptyRouteMsgView from '../view/empty-route-msg/empty-route-message-view';
+import LoadingView from '../view/loading-events/loading-view';
 import EventPresenter from './event-presenter';
 import {
   sortEventByDuration,
@@ -17,6 +18,7 @@ export default class TripPresenter {
   #filterModel = null;
 
   #eventListComponent = new EventListView();
+  #loadingComponent = new LoadingView();
   #tripContainerElement = null;
   #sortComponent = null;
   #noEventsComponent = null;
@@ -26,6 +28,7 @@ export default class TripPresenter {
 
   #filterType = TYPES_FILTER.EVERYTHING;
   #currentSortType = SortType.DAY;
+  #isLoading = true;
 
   constructor({
     tripContainerElement,
@@ -101,6 +104,11 @@ export default class TripPresenter {
         this.#clearBoard(true);
         this.#renderTripEvents();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderTripEvents();
+        break;
     }
   };
 
@@ -125,6 +133,7 @@ export default class TripPresenter {
     this.#eventPresenters.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
     if (this.#noEventsComponent) {
       remove(this.#noEventsComponent);
     }
@@ -152,6 +161,10 @@ export default class TripPresenter {
     render(this.#noEventsComponent, this.#tripContainerElement);
   }
 
+  #renderLoading() {
+    render(this.#loadingComponent, this.#tripContainerElement, RenderPosition.AFTERBEGIN);
+  }
+
   #renderTripSort() {
     this.#sortComponent = new TripSortView({
       currentSortType: this.#currentSortType,
@@ -161,6 +174,11 @@ export default class TripPresenter {
   }
 
   #renderTripEvents() {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (this.events.length === 0) {
       this.#renderNoEvents();
       return;

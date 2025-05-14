@@ -120,7 +120,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #changePriceHandler = (evt) => {
     evt.preventDefault();
-    this._setState({ basePrice: evt.target.value });
+    this._setState({ basePrice: Number(evt.target.value) });
   };
 
   #ChangeDestinationHandler = (evt) => {
