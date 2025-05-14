@@ -70,7 +70,8 @@ export default class EventPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#eventEditView, prevEventEditView);
+      replace(this.#eventView, prevEventEditView);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevEventView);
@@ -86,6 +87,41 @@ export default class EventPresenter {
     if (this.#mode !== Mode.DEFAULT) {
       this.#switchViewAndEdit(this.#componentNames.eventView);
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditView.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditView.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#eventView.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#eventEditView.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#eventEditView.shake(resetFormState);
   }
 
   #switchViewAndEdit(targetComponent) {
@@ -130,7 +166,6 @@ export default class EventPresenter {
 
   #handleEditFormSubmit = (event) => {
     this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, event);
-    this.#switchViewAndEdit(this.#componentNames.eventView);
   };
 
   #handleEditFormClose = () => {
