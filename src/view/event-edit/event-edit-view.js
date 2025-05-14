@@ -11,13 +11,14 @@ const BLANK_EVENT = {
   dateTo: null,
   destination: '',
   offers: [],
+  isFavorite: false,
 };
 
 export default class EventEditView extends AbstractStatefulView {
   #startDateTimePicker = null;
   #finishDateTimePicker = null;
 
-  #userAtion = null;
+  #userAction = null;
 
   constructor({
     event = BLANK_EVENT,
@@ -30,7 +31,7 @@ export default class EventEditView extends AbstractStatefulView {
   }) {
     super();
     this._setState(EventEditView.parsePointToState(event));
-    this.#userAtion = userAction;
+    this.#userAction = userAction;
     this.destinations = destinations;
     this.offers = offers;
     this.handleFormSubmit = onFormSubmit;
@@ -74,7 +75,7 @@ export default class EventEditView extends AbstractStatefulView {
       this._state,
       this.destinations,
       this.offers,
-      this.#userAtion
+      this.#userAction
     );
   }
 
@@ -100,12 +101,12 @@ export default class EventEditView extends AbstractStatefulView {
       this.handleFormClose();
       return;
     }
-    this.handleFormSubmit({ ...this._state });
+    this.handleFormSubmit(EventEditView.parseStateToEvent(this._state));
   };
 
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
-    this.handleDeleteClick({ ...this._state });
+    this.handleDeleteClick(EventEditView.parseStateToEvent(this._state));
   };
 
   #formCloseHandler = (evt) => {
@@ -135,11 +136,10 @@ export default class EventEditView extends AbstractStatefulView {
   #changeOffersHandlers = (evt) => {
     evt.preventDefault();
     const nameOffer = evt.currentTarget
-      .getAttribute('name')
-      .replaceAll('-', ' ');
+      .getAttribute('name');
     const clickedOfferId = this.offers
       .find((offers) => offers.type === this._state.type)
-      .offers.find((offer) => offer.title === nameOffer).id;
+      .offers.find((offer) => offer.title.replace(/[ ,']/g, '') === nameOffer).id;
 
     const newOffers = this._state.offers.includes(clickedOfferId)
       ? this._state.offers.filter((offer) => offer !== clickedOfferId)
@@ -184,6 +184,20 @@ export default class EventEditView extends AbstractStatefulView {
   }
 
   static parsePointToState(event) {
-    return { ...event };
+    return { ...event,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    };
+  }
+
+  static parseStateToEvent(state) {
+    const event = {...state};
+
+    delete event.isDisabled;
+    delete event.isSaving;
+    delete event.isDeleting;
+
+    return event;
   }
 }
