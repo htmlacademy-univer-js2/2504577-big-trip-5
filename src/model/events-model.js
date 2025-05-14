@@ -1,14 +1,11 @@
-import { getEvents } from "../mock/events";
-import { mockDestinations } from "../mock/events";
-import { mockOffers } from "../mock/events";
-import { UpdateType } from "../const.js";
-import Observable from "../framework/observable.js";
+import { UpdateType } from '../const.js';
+import Observable from '../framework/observable.js';
 
 export default class EventsModel extends Observable {
   #eventsApiService = null;
   #eventObjects = [];
-  #destinationObjects = [...mockDestinations];
-  #offerObjects = [...mockOffers];
+  #destinationObjects = [];
+  #offerObjects = [];
 
   constructor({ eventsApiService }) {
     super();
@@ -17,12 +14,15 @@ export default class EventsModel extends Observable {
 
   async init() {
     try {
+      this.#destinationObjects = await this.#eventsApiService.destinations;
+      this.#offerObjects = await this.#eventsApiService.offers;
       const events = await this.#eventsApiService.events;
       this.#eventObjects = events.map(this.#adaptToClient);
-    } catch(err) {
+    } catch (err) {
       this.#eventObjects = [];
+      this.#destinationObjects = [];
+      this.#offerObjects = [];
     }
-
     this._notify(UpdateType.INIT);
   }
 
@@ -46,22 +46,27 @@ export default class EventsModel extends Observable {
     return this.#eventObjects;
   }
 
-  updateEvent(updateType, update) {
+  async updateEvent(updateType, update) {
     const index = this.#eventObjects.findIndex(
       (event) => event.id === update.id
     );
 
     if (index === -1) {
-      throw new Error("Can't update unexisting task");
+      throw new Error('Can\'t update unexisting task');
     }
 
-    this.#eventObjects = [
-      ...this.#eventObjects.slice(0, index),
-      update,
-      ...this.#eventObjects.slice(index + 1),
-    ];
-
-    this._notify(updateType, update);
+    try {
+      const response = await this.#eventsApiService.updateEvent(update);
+      const updatedEvent = this.#adaptToClient(response);
+      this.#eventObjects = [
+        ...this.#eventObjects.slice(0, index),
+        updatedEvent,
+        ...this.#eventObjects.slice(index + 1),
+      ];
+      this._notify(updateType, updatedEvent);
+    } catch (err) {
+      throw new Error('Can\'t update event');
+    }
   }
 
   addEvent(updateType, update) {
@@ -76,7 +81,7 @@ export default class EventsModel extends Observable {
     );
 
     if (index === -1) {
-      throw new Error("Can't update unexisting task");
+      throw new Error('Can\'t update unexisting task');
     }
 
     this.#eventObjects = [
@@ -91,19 +96,21 @@ export default class EventsModel extends Observable {
     const adaptedEvent = {
       ...event,
       dateFrom:
-        event["date_from"] !== null
-          ? new Date(event["date_from"])
-          : event["date_from"],
+        event['date_from'] !== null
+          ? new Date(event['date_from'])
+          : event['date_from'],
       dateTo:
-        event["date_to"] !== null
-          ? new Date(event["date_to"])
-          : event["date_to"],
-      isFavorite: event["is_favorite"],
+        event['date_to'] !== null
+          ? new Date(event['date_to'])
+          : event['date_to'],
+      isFavorite: event['is_favorite'],
+      basePrice: event['base_price'],
     };
 
     delete adaptedEvent['date_from'];
     delete adaptedEvent['date_to'];
     delete adaptedEvent['is_favorite'];
+    delete adaptedEvent['base_price'];
 
     return adaptedEvent;
   }

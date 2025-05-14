@@ -48,3 +48,4 @@ render(newEventButtonComponent, siteHeaderElement);
 filterPresenter.init();
 tripPresenter.init();
 eventsModel.init();
+
