@@ -3,13 +3,15 @@ import { createEmptyRouteMsgTemplate } from './empty-route-msg-template';
 
 export default class EmptyRouteMsgView extends AbstractView {
   #filterType = null;
+  #loadErr = null;
 
-  constructor({filterType}) {
+  constructor({filterType, loadErr}) {
     super();
     this.#filterType = filterType;
+    this.#loadErr = loadErr;
   }
 
   get template() {
-    return createEmptyRouteMsgTemplate(this.#filterType);
+    return createEmptyRouteMsgTemplate(this.#filterType, this.#loadErr);
   }
 }

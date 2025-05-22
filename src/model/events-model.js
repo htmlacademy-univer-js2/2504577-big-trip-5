@@ -1,5 +1,5 @@
-import { UpdateType } from '../const.js';
-import Observable from '../framework/observable.js';
+import { UpdateType } from "../const.js";
+import Observable from "../framework/observable.js";
 
 export default class EventsModel extends Observable {
   #eventsApiService = null;
@@ -10,6 +10,7 @@ export default class EventsModel extends Observable {
   constructor({ eventsApiService }) {
     super();
     this.#eventsApiService = eventsApiService;
+    this.loadErr = false;
   }
 
   async init() {
@@ -19,9 +20,7 @@ export default class EventsModel extends Observable {
       const events = await this.#eventsApiService.events;
       this.#eventObjects = events.map(this.#adaptToClient);
     } catch (err) {
-      this.#eventObjects = [];
-      this.#destinationObjects = [];
-      this.#offerObjects = [];
+      this.loadErr = true;
     }
     this._notify(UpdateType.INIT);
   }
@@ -52,7 +51,7 @@ export default class EventsModel extends Observable {
     );
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error("Can't update unexisting task");
     }
 
     try {
@@ -65,7 +64,7 @@ export default class EventsModel extends Observable {
       ];
       this._notify(updateType, updatedEvent);
     } catch (err) {
-      throw new Error('Can\'t update event');
+      throw new Error("Can't update event");
     }
   }
 
@@ -76,7 +75,7 @@ export default class EventsModel extends Observable {
       this.#eventObjects = [newEvent, ...this.#eventObjects];
       this._notify(updateType, newEvent);
     } catch (err) {
-      throw new Error('Can\'t add task');
+      throw new Error("Can't add task");
     }
   }
 
@@ -86,7 +85,7 @@ export default class EventsModel extends Observable {
     );
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting task');
+      throw new Error("Can't update unexisting task");
     }
 
     try {
@@ -97,7 +96,7 @@ export default class EventsModel extends Observable {
       ];
       this._notify(updateType);
     } catch (err) {
-      throw new Error('Can\'t delete task');
+      throw new Error("Can't delete task");
     }
   }
 
@@ -105,21 +104,21 @@ export default class EventsModel extends Observable {
     const adaptedEvent = {
       ...event,
       dateFrom:
-        event['date_from'] !== null
-          ? new Date(event['date_from'])
-          : event['date_from'],
+        event["date_from"] !== null
+          ? new Date(event["date_from"])
+          : event["date_from"],
       dateTo:
-        event['date_to'] !== null
-          ? new Date(event['date_to'])
-          : event['date_to'],
-      isFavorite: event['is_favorite'],
-      basePrice: event['base_price'],
+        event["date_to"] !== null
+          ? new Date(event["date_to"])
+          : event["date_to"],
+      isFavorite: event["is_favorite"],
+      basePrice: event["base_price"],
     };
 
-    delete adaptedEvent['date_from'];
-    delete adaptedEvent['date_to'];
-    delete adaptedEvent['is_favorite'];
-    delete adaptedEvent['base_price'];
+    delete adaptedEvent["date_from"];
+    delete adaptedEvent["date_to"];
+    delete adaptedEvent["is_favorite"];
+    delete adaptedEvent["base_price"];
 
     return adaptedEvent;
   }

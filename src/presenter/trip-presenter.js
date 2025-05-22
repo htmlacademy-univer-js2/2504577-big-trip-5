@@ -1,18 +1,18 @@
-import { render, remove, RenderPosition } from '../framework/render';
-import UiBlocker from '../framework/ui-blocker/ui-blocker';
-import EventListView from '../view/event-list/event-list-view';
-import TripSortView from '../view/trip-sort/trip-sort-view';
-import EmptyRouteMsgView from '../view/empty-route-msg/empty-route-message-view';
-import LoadingView from '../view/loading-events/loading-view';
-import EventPresenter from './event-presenter';
+import { render, remove, RenderPosition } from "../framework/render";
+import UiBlocker from "../framework/ui-blocker/ui-blocker";
+import EventListView from "../view/event-list/event-list-view";
+import TripSortView from "../view/trip-sort/trip-sort-view";
+import EmptyRouteMsgView from "../view/empty-route-msg/empty-route-message-view";
+import LoadingView from "../view/loading-events/loading-view";
+import EventPresenter from "./event-presenter";
 import {
   sortEventByDuration,
   sortEventByPrice,
   sortEventByStartTime,
-} from '../utils/date-time';
-import { SortType, TYPES_FILTER, UpdateType, UserAction } from '../const';
-import NewEventPresenter from './new-event-presenter';
-import { filter } from '../utils/filter';
+} from "../utils/date-time";
+import { SortType, TYPES_FILTER, UpdateType, UserAction } from "../const";
+import NewEventPresenter from "./new-event-presenter";
+import { filter } from "../utils/filter";
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
@@ -37,7 +37,7 @@ export default class TripPresenter {
   #isLoading = true;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
-    upperLimit: TimeLimit.UPPER_LIMIT
+    upperLimit: TimeLimit.UPPER_LIMIT,
   });
 
   constructor({
@@ -70,6 +70,9 @@ export default class TripPresenter {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, TYPES_FILTER.EVERYTHING);
     this.#newEventPresenter.init();
+    if (this.#noEventsComponent) {
+      remove(this.#noEventsComponent);
+    }
   }
 
   get events() {
@@ -94,7 +97,7 @@ export default class TripPresenter {
         this.#eventPresenters.get(update.id).setSaving();
         try {
           await this.#eventsModel.updateEvent(updateType, update);
-        } catch(err) {
+        } catch (err) {
           this.#eventPresenters.get(update.id).setAborting();
         }
         break;
@@ -102,7 +105,7 @@ export default class TripPresenter {
         this.#newEventPresenter.setSaving();
         try {
           await this.#eventsModel.addEvent(updateType, update);
-        } catch(err) {
+        } catch (err) {
           this.#newEventPresenter.setAborting();
         }
         break;
@@ -110,10 +113,12 @@ export default class TripPresenter {
         this.#eventPresenters.get(update.id).setDeleting();
         try {
           await this.#eventsModel.deleteEvent(updateType, update);
-        } catch(err) {
+        } catch (err) {
           this.#eventPresenters.get(update.id).setAborting();
         }
         break;
+      case UserAction.CANCEL_CREATION:
+        this.#handleModelEvent(updateType)
     }
 
     this.#uiBlocker.unblock();
@@ -185,12 +190,17 @@ export default class TripPresenter {
   #renderNoEvents() {
     this.#noEventsComponent = new EmptyRouteMsgView({
       filterType: this.#filterType,
+      loadErr: this.#eventsModel.loadErr,
     });
     render(this.#noEventsComponent, this.#tripContainerElement);
   }
 
   #renderLoading() {
-    render(this.#loadingComponent, this.#tripContainerElement, RenderPosition.AFTERBEGIN);
+    render(
+      this.#loadingComponent,
+      this.#tripContainerElement,
+      RenderPosition.AFTERBEGIN
+    );
   }
 
   #renderTripSort() {
@@ -208,6 +218,7 @@ export default class TripPresenter {
     }
 
     if (this.events.length === 0) {
+      render(this.#eventListComponent, this.#tripContainerElement);
       this.#renderNoEvents();
       return;
     }

@@ -15,16 +15,19 @@ const filtersElement = document.querySelector('.trip-controls__filters');
 const siteHeaderElement = document.querySelector('.trip-main');
 const tripEventsElement = document.querySelector('.trip-events');
 
+const filterModel = new FilterModel();
+
 const eventsModel = new EventsModel({
   eventsApiService: new EventsApiService(END_POINT, AUTHORIZATION)
 });
-const filterModel = new FilterModel();
+
 const tripPresenter = new TripPresenter({
   tripContainerElement: tripEventsElement,
   eventsModel,
   filterModel,
   onNewEventDestroy: handleNewEventFormClose,
 });
+
 const filterPresenter = new FilterPresenter({
   filterContainer: filtersElement,
   filterModel,

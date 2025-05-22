@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
 function formatDateDifference(startDate, endDate) {
@@ -7,23 +7,20 @@ function formatDateDifference(startDate, endDate) {
   const end = dayjs(endDate);
 
   const diff = dayjs.duration(end.diff(start));
-
-  const days = diff.days();
+  const days = end.diff(start, "day");
   const hours = diff.hours();
   const minutes = diff.minutes();
 
   const result = [];
   if (days > 0) {
-    result.push(`${days}D`);
+    result.push(`${days.toString().padStart(2, "0")}D`);
   }
-  if (hours > 0) {
-    result.push(`${hours}H`);
+  if (hours > 0 || days > 0) {
+    result.push(`${hours.toString().padStart(2, "0")}H`);
   }
-  if (minutes > 0) {
-    result.push(`${minutes}M`);
-  }
+  result.push(`${minutes.toString().padStart(2, "0")}M`);
 
-  return result.join(' ');
+  return result.join(" ");
 }
 
 function isEventInFuture(startDateTimeEvent) {
@@ -67,13 +64,16 @@ function sortEventByPrice(eventA, eventB) {
   return Number(eventB.basePrice) - Number(eventA.basePrice);
 }
 
-const getFormattedDate = (dateStr, format = 'YYYY-MM-DD') =>
+const getFormattedDate = (dateStr, format = "YYYY-MM-DD") =>
   dayjs(dateStr).format(format);
+
 const getFormattedMonthDay = (dateStr) =>
-  dayjs(dateStr).format('MMM DD').toUpperCase();
+  dayjs(dateStr).format("MMM DD").toUpperCase();
+
 const getFormattedDateTime = (dateStr) =>
-  dayjs(dateStr).format('YYYY-MM-DDTHH:mm');
-const getFormattedTime = (dateStr) => dayjs(dateStr).format('HH:mm');
+  dayjs(dateStr).format("YYYY-MM-DDTHH:mm");
+
+const getFormattedTime = (dateStr) => dayjs(dateStr).format("HH:mm");
 
 export {
   isFirstDateEarlierSecond,

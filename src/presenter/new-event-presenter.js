@@ -79,16 +79,19 @@ export default class NewEventPresenter {
 
   #handleFormClose = () => {
     this.destroy();
+    this.#handleDataChange(UserAction.CANCEL_CREATION, UpdateType.MINOR);
   };
 
   #handleDeleteClick = () => {
     this.destroy();
+    this.#handleDataChange(UserAction.CANCEL_CREATION, UpdateType.MINOR);
   };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
+      this.#handleDataChange(UserAction.CANCEL_CREATION, UpdateType.MINOR);
     }
   };
 }
