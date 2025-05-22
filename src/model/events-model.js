@@ -10,6 +10,7 @@ export default class EventsModel extends Observable {
   constructor({ eventsApiService }) {
     super();
     this.#eventsApiService = eventsApiService;
+    this.loadErr = false;
   }
 
   async init() {
@@ -19,9 +20,7 @@ export default class EventsModel extends Observable {
       const events = await this.#eventsApiService.events;
       this.#eventObjects = events.map(this.#adaptToClient);
     } catch (err) {
-      this.#eventObjects = [];
-      this.#destinationObjects = [];
-      this.#offerObjects = [];
+      this.loadErr = true;
     }
     this._notify(UpdateType.INIT);
   }

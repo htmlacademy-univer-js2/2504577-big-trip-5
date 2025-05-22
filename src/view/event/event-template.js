@@ -22,7 +22,7 @@ function createEventTemplate(point, destination, offers) {
   const eventStartDate = getFormattedDate(dateFrom);
   const eventStartMonthDay = getFormattedMonthDay(dateFrom);
   const eventStartDateTime = getFormattedDateTime(dateFrom);
-  const eventFinishDateTime = getFormattedDateTime(dateFrom);
+  const eventFinishDateTime = getFormattedDateTime(dateTo);
   const eventStartTime = getFormattedTime(dateFrom);
   const eventFinishTime = getFormattedTime(dateTo);
   const dateDiff = formatDateDifference(dateFrom, dateTo);

@@ -27,6 +27,7 @@ const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
   ADD_POINT: 'ADD_POINT',
   DELETE_POINT: 'DELETE_POINT',
+  CANCEL_CREATION: 'CANCEL_CREATION',
 };
 
 const UpdateType = {
@@ -36,4 +37,4 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export {TYPES_EVENT, TYPES_FILTER, SortType, UserAction, UpdateType};
+export { TYPES_EVENT, TYPES_FILTER, SortType, UserAction, UpdateType };

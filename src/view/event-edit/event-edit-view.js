@@ -116,7 +116,7 @@ export default class EventEditView extends AbstractStatefulView {
 
   #changeTypeHandler = (evt) => {
     evt.preventDefault();
-    this.updateElement({ type: evt.target.value });
+    this.updateElement({offers: [], type: evt.target.value });
   };
 
   #changePriceHandler = (evt) => {
@@ -149,15 +149,15 @@ export default class EventEditView extends AbstractStatefulView {
   };
 
   #changeStartDateHandler = ([date]) => {
-    this.updateElement({ dateFrom: getDateInISOFormat(date) });
+    this._setState({ dateFrom: getDateInISOFormat(date) });
 
     if (!isFirstDateEarlierSecond(date, this._state.dateTo)) {
-      this.updateElement({ dateTo: getDateInISOFormat(date) });
+      this._setState({ dateTo: getDateInISOFormat(date) });
     }
   };
 
   #changeFinishDateHandler = ([date]) => {
-    this.updateElement({ dateTo: getDateInISOFormat(date) });
+    this._setState({ dateTo: getDateInISOFormat(date) });
   };
 
   #setDatepicker() {
@@ -165,7 +165,7 @@ export default class EventEditView extends AbstractStatefulView {
       this.element.querySelector('input[name=\'event-start-time\']'),
       {
         enableTime: true,
-        dateFormat: 'd/m/Y H:i',
+        dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateFrom,
         onChange: this.#changeStartDateHandler,
       }
@@ -176,7 +176,7 @@ export default class EventEditView extends AbstractStatefulView {
       {
         minDate: this._state.dateFrom,
         enableTime: true,
-        dateFormat: 'd/m/Y H:i',
+        dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateTo,
         onChange: this.#changeFinishDateHandler,
       }

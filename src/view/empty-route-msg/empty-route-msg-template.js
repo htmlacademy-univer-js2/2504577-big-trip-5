@@ -7,8 +7,11 @@ const msg = {
   [TYPES_FILTER.PRESENT]: 'There are no present events now',
 };
 
-function createEmptyRouteMsgTemplate(filterType) {
-  return `<p class='trip-events__msg'>${msg[filterType]}</p>`;
+function createEmptyRouteMsgTemplate(filterType, loadErr) {
+  const m = loadErr
+    ? 'Failed to load latest route information'
+    : msg[filterType];
+  return `<p class='trip-events__msg'>${m}</p>`;
 }
 
 export { createEmptyRouteMsgTemplate };
