@@ -1,18 +1,18 @@
-import { render, remove, RenderPosition } from "../framework/render";
-import UiBlocker from "../framework/ui-blocker/ui-blocker";
-import EventListView from "../view/event-list/event-list-view";
-import TripSortView from "../view/trip-sort/trip-sort-view";
-import EmptyRouteMsgView from "../view/empty-route-msg/empty-route-message-view";
-import LoadingView from "../view/loading-events/loading-view";
-import EventPresenter from "./event-presenter";
+import { render, remove, RenderPosition } from '../framework/render';
+import UiBlocker from '../framework/ui-blocker/ui-blocker';
+import EventListView from '../view/event-list/event-list-view';
+import TripSortView from '../view/trip-sort/trip-sort-view';
+import EmptyRouteMsgView from '../view/empty-route-msg/empty-route-message-view';
+import LoadingView from '../view/loading-events/loading-view';
+import EventPresenter from './event-presenter';
 import {
   sortEventByDuration,
   sortEventByPrice,
   sortEventByStartTime,
-} from "../utils/date-time";
-import { SortType, TYPES_FILTER, UpdateType, UserAction } from "../const";
-import NewEventPresenter from "./new-event-presenter";
-import { filter } from "../utils/filter";
+} from '../utils/date-time';
+import { SortType, TYPES_FILTER, UpdateType, UserAction } from '../const';
+import NewEventPresenter from './new-event-presenter';
+import { filter } from '../utils/filter';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
@@ -118,7 +118,7 @@ export default class TripPresenter {
         }
         break;
       case UserAction.CANCEL_CREATION:
-        this.#handleModelEvent(updateType)
+        this.#handleModelEvent(updateType);
     }
 
     this.#uiBlocker.unblock();
