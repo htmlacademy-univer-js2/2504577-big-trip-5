@@ -104,11 +104,11 @@ export default class EventsModel extends Observable {
     const adaptedEvent = {
       ...event,
       dateFrom:
-        event['date_from'] !== null
+        event['date_from']
           ? new Date(event['date_from'])
           : event['date_from'],
       dateTo:
-        event['date_to'] !== null
+        event['date_to']
           ? new Date(event['date_to'])
           : event['date_to'],
       isFavorite: event['is_favorite'],

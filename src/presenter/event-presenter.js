@@ -1,7 +1,7 @@
 import { remove, render, replace } from '../framework/render';
 import EventEditView from '../view/event-edit/event-edit-view';
 import EventView from '../view/event/event-view';
-import { UserAction, UpdateType } from '../const';
+import { closeViewKey, UserAction, UpdateType } from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -60,7 +60,7 @@ export default class EventPresenter {
       onDeleteClick: this.#handleDeleteClick,
     });
 
-    if (prevEventView === null || prevEventEditView === null) {
+    if (!prevEventView || !prevEventEditView) {
       render(this.#eventView, this.#eventListContainer);
       return;
     }
@@ -142,7 +142,7 @@ export default class EventPresenter {
   }
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
+    if (evt.key === closeViewKey) {
       evt.preventDefault();
       this.#switchViewAndEdit(this.#componentNames.eventView);
       document.removeEventListener('keydown', this.#escKeyDownHandler);
