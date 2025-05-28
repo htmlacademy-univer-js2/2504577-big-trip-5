@@ -37,4 +37,13 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-export { TYPES_EVENT, TYPES_FILTER, SortType, UserAction, UpdateType };
+const closeViewKey = 'Escape';
+
+export {
+  closeViewKey,
+  TYPES_EVENT,
+  TYPES_FILTER,
+  SortType,
+  UserAction,
+  UpdateType,
+};

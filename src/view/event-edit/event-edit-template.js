@@ -54,9 +54,9 @@ function createEventEditTemplate(point, destinations, offers, userAction) {
   ) || { offers: [] };
   const { offers: availableOffers = [] } = availableOffersData;
 
-  const eventStartDateTime = dateFrom === null ?
+  const eventStartDateTime = !dateFrom ?
     '' : `${getFormattedDate(dateFrom, 'DD/MM/YY')} ${getFormattedTime(dateFrom)}`;
-  const eventFinishDateTime = dateTo === null ?
+  const eventFinishDateTime = !dateTo ?
     '' : `${getFormattedDate(dateTo, 'DD/MM/YY')} ${getFormattedTime(dateTo)}`;
 
   const typeEventTemplate = Object.values(TYPES_EVENT)

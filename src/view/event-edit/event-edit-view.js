@@ -97,10 +97,6 @@ export default class EventEditView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    if (this._state.destination === '' || !this._state.dateFrom || !this._state.dateTo || this._state.basePrice < 0) {
-      this.handleFormClose();
-      return;
-    }
     this.handleFormSubmit(EventEditView.parseStateToEvent(this._state));
   };
 
