@@ -1,4 +1,4 @@
-import { TYPES_EVENT } from '../../const';
+import { TypesEvent } from '../../const';
 import { capitalize } from '../../utils/common';
 
 function createTypeEventTemplate(type, checked = false) {
@@ -27,7 +27,7 @@ function createOfferSelectorTemplate(title, price) {
 
 function createEventCreateTemplate(destinations, offers) {
   const {offers: availableOffers} = offers;
-  const typeEventTemplate = Object.values(TYPES_EVENT).map((type) => (type === 'flight' ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('');
+  const typeEventTemplate = Object.values(TypesEvent).map((type) => (type === 'flight' ? createTypeEventTemplate(type, true) : createTypeEventTemplate(type))).join('');
   const dataListOptionTemplate = destinations.map(({name}) => (createDataListOptionTemplate(name))).join('');
   const offerSelectorTemplate = availableOffers.map(({title, price}) => (createOfferSelectorTemplate(title, price))).join('');
 

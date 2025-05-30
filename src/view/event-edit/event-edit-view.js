@@ -148,7 +148,7 @@ export default class EventEditView extends AbstractStatefulView {
     this._setState({ dateFrom: getDateInISOFormat(date) });
 
     if (!isFirstDateEarlierSecond(date, this._state.dateTo)) {
-      this._setState({ dateTo: getDateInISOFormat(date) });
+      this.updateElement({ dateTo: getDateInISOFormat(date) });
     }
   };
 

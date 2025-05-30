@@ -1,10 +1,10 @@
-import { TYPES_FILTER } from '../../const';
+import { TypesFilter } from '../../const';
 
 const msg = {
-  [TYPES_FILTER.EVERYTHING]: 'Click New Event to create your first point',
-  [TYPES_FILTER.FUTURE]: 'There are no future events now',
-  [TYPES_FILTER.PAST]: 'There are no past events now',
-  [TYPES_FILTER.PRESENT]: 'There are no present events now',
+  [TypesFilter.EVERYTHING]: 'Click New Event to create your first point',
+  [TypesFilter.FUTURE]: 'There are no future events now',
+  [TypesFilter.PAST]: 'There are no past events now',
+  [TypesFilter.PRESENT]: 'There are no present events now',
 };
 
 function createEmptyRouteMsgTemplate(filterType, loadErr) {

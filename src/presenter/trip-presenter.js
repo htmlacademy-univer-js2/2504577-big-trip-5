@@ -10,7 +10,7 @@ import {
   sortEventByPrice,
   sortEventByStartTime,
 } from '../utils/date-time';
-import { SortType, TYPES_FILTER, UpdateType, UserAction } from '../const';
+import { SortType, TypesFilter, UpdateType, UserAction } from '../const';
 import NewEventPresenter from './new-event-presenter';
 import { filter } from '../utils/filter';
 
@@ -32,7 +32,7 @@ export default class TripPresenter {
   #eventPresenters = new Map();
   #newEventPresenter = null;
 
-  #filterType = TYPES_FILTER.EVERYTHING;
+  #filterType = TypesFilter.EVERYTHING;
   #currentSortType = SortType.DAY;
   #isLoading = true;
   #uiBlocker = new UiBlocker({
@@ -68,7 +68,7 @@ export default class TripPresenter {
 
   createEvent() {
     this.#currentSortType = SortType.DAY;
-    this.#filterModel.setFilter(UpdateType.MAJOR, TYPES_FILTER.EVERYTHING);
+    this.#filterModel.setFilter(UpdateType.MAJOR, TypesFilter.EVERYTHING);
     this.#newEventPresenter.init();
     if (this.#noEventsComponent) {
       remove(this.#noEventsComponent);
@@ -77,7 +77,7 @@ export default class TripPresenter {
 
   get events() {
     this.#filterType = this.#filterModel.filter;
-    const events = this.#eventsModel.eventObjects;
+    const events = this.#eventsModel.events;
     const filteresEvents = filter[this.#filterType](events);
 
     switch (this.#currentSortType) {
@@ -176,15 +176,15 @@ export default class TripPresenter {
     }
   }
 
-  #renderEvent(eventObject) {
+  #renderEvent(event) {
     const eventPresenter = new EventPresenter({
       eventListContainer: this.#eventListComponent.element,
       eventsModel: this.#eventsModel,
       onModeChange: this.#handleModeChange,
       onDataChange: this.#handleViewAction,
     });
-    eventPresenter.init(eventObject);
-    this.#eventPresenters.set(eventObject.id, eventPresenter);
+    eventPresenter.init(event);
+    this.#eventPresenters.set(event.id, eventPresenter);
   }
 
   #renderNoEvents() {

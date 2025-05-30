@@ -1,4 +1,4 @@
-import { UpdateType, UserAction, closeViewKey } from '../const';
+import { UpdateType, UserAction, CLOSE_VIEW_KEY } from '../const';
 import EventEditView from '../view/event-edit/event-edit-view';
 import { remove, render, RenderPosition } from '../framework/render';
 
@@ -24,8 +24,8 @@ export default class NewEventPresenter {
     }
 
     this.#eventEditComponent = new EventEditView({
-      destinations: this.#eventsModel.destinationObjects,
-      offers: this.#eventsModel.offerObjects,
+      destinations: this.#eventsModel.destinations,
+      offers: this.#eventsModel.offers,
       userAction: UserAction.ADD_POINT,
       onFormSubmit: this.#handleFormSubmit,
       onFormClose: this.#handleFormClose,
@@ -88,7 +88,7 @@ export default class NewEventPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === closeViewKey) {
+    if (evt.key === CLOSE_VIEW_KEY) {
       evt.preventDefault();
       this.destroy();
       this.#handleDataChange(UserAction.CANCEL_CREATION, UpdateType.MINOR);

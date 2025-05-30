@@ -1,4 +1,4 @@
-const TYPES_EVENT = {
+const TypesEvent = {
   TAXI: 'taxi',
   BUS: 'bus',
   TRAIN: 'train',
@@ -10,7 +10,7 @@ const TYPES_EVENT = {
   RESTAURANT: 'restaurant',
 };
 
-const TYPES_FILTER = {
+const TypesFilter = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
@@ -37,12 +37,12 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-const closeViewKey = 'Escape';
+const CLOSE_VIEW_KEY = 'Escape';
 
 export {
-  closeViewKey,
-  TYPES_EVENT,
-  TYPES_FILTER,
+  CLOSE_VIEW_KEY,
+  TypesEvent,
+  TypesFilter,
   SortType,
   UserAction,
   UpdateType,
