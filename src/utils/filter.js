@@ -1,13 +1,13 @@
-import { TYPES_FILTER } from '../const';
+import { TypesFilter } from '../const';
 import { isEventInFuture, isEventInPast, isEventInPresent } from './date-time';
 
 const filter = {
-  [TYPES_FILTER.EVERYTHING]: (events) => events,
-  [TYPES_FILTER.FUTURE]: (events) =>
+  [TypesFilter.EVERYTHING]: (events) => events,
+  [TypesFilter.FUTURE]: (events) =>
     events.filter((event) => isEventInFuture(event.dateFrom)),
-  [TYPES_FILTER.PRESENT]: (events) =>
+  [TypesFilter.PRESENT]: (events) =>
     events.filter((event) => isEventInPresent(event.dateFrom, event.dateTo)),
-  [TYPES_FILTER.PAST]: (events) =>
+  [TypesFilter.PAST]: (events) =>
     events.filter((event) => isEventInPast(event.dateTo)),
 };
 

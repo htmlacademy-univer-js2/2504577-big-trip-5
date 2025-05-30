@@ -1,7 +1,7 @@
 import { remove, render, replace } from '../framework/render';
 import EventEditView from '../view/event-edit/event-edit-view';
 import EventView from '../view/event/event-view';
-import { closeViewKey, UserAction, UpdateType } from '../const';
+import { CLOSE_VIEW_KEY, UserAction, UpdateType } from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -19,7 +19,7 @@ export default class EventPresenter {
   #eventView = null;
   #eventEditView = null;
 
-  #eventObject = null;
+  #event = null;
   #mode = Mode.DEFAULT;
 
   constructor({ eventListContainer, eventsModel, onModeChange, onDataChange }) {
@@ -29,22 +29,22 @@ export default class EventPresenter {
     this.#handleDataChange = onDataChange;
   }
 
-  init(eventObject) {
-    this.#eventObject = eventObject;
+  init(event) {
+    this.#event = event;
     const prevEventView = this.#eventView;
     const prevEventEditView = this.#eventEditView;
 
-    const destination = this.#eventsModel.getDestinationObjectById(
-      this.#eventObject.destination
+    const destination = this.#eventsModel.getDestinationById(
+      this.#event.destination
     );
-    const destinations = this.#eventsModel.destinationObjects;
-    const offersByType = this.#eventsModel.getOfferObjectsByType(
-      this.#eventObject.type
+    const destinations = this.#eventsModel.destinations;
+    const offersByType = this.#eventsModel.getOffersByType(
+      this.#event.type
     );
-    const offers = this.#eventsModel.offerObjects;
+    const offers = this.#eventsModel.offers;
 
     this.#eventView = new EventView({
-      event: this.#eventObject,
+      event: this.#event,
       destination: destination,
       offers: offersByType,
       onEditClick: this.#handleEditClick,
@@ -52,7 +52,7 @@ export default class EventPresenter {
     });
 
     this.#eventEditView = new EventEditView({
-      event: this.#eventObject,
+      event: this.#event,
       destinations: destinations,
       offers: offers,
       onFormSubmit: this.#handleEditFormSubmit,
@@ -127,7 +127,7 @@ export default class EventPresenter {
   #switchViewAndEdit(targetComponent) {
     switch (targetComponent) {
       case this.#componentNames.eventView:
-        this.#eventEditView.reset(this.#eventObject);
+        this.#eventEditView.reset(this.#event);
         replace(this.#eventView, this.#eventEditView);
         document.removeEventListener('keydown', this.#escKeyDownHandler);
         this.#mode = Mode.DEFAULT;
@@ -142,7 +142,7 @@ export default class EventPresenter {
   }
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === closeViewKey) {
+    if (evt.key === CLOSE_VIEW_KEY) {
       evt.preventDefault();
       this.#switchViewAndEdit(this.#componentNames.eventView);
       document.removeEventListener('keydown', this.#escKeyDownHandler);
@@ -151,8 +151,8 @@ export default class EventPresenter {
 
   #handleFavoriteClick = () => {
     this.#handleDataChange(UserAction.UPDATE_POINT, UpdateType.MINOR, {
-      ...this.#eventObject,
-      isFavorite: !this.#eventObject.isFavorite,
+      ...this.#event,
+      isFavorite: !this.#event.isFavorite,
     });
   };
 

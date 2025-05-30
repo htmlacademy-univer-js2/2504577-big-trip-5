@@ -3,9 +3,9 @@ import Observable from '../framework/observable.js';
 
 export default class EventsModel extends Observable {
   #eventsApiService = null;
-  #eventObjects = [];
-  #destinationObjects = [];
-  #offerObjects = [];
+  #events = [];
+  #destinations = [];
+  #offers = [];
 
   constructor({ eventsApiService }) {
     super();
@@ -15,38 +15,38 @@ export default class EventsModel extends Observable {
 
   async init() {
     try {
-      this.#destinationObjects = await this.#eventsApiService.destinations;
-      this.#offerObjects = await this.#eventsApiService.offers;
+      this.#destinations = await this.#eventsApiService.destinations;
+      this.#offers = await this.#eventsApiService.offers;
       const events = await this.#eventsApiService.events;
-      this.#eventObjects = events.map(this.#adaptToClient);
+      this.#events = events.map(this.#adaptToClient);
     } catch (err) {
       this.loadErr = true;
     }
     this._notify(UpdateType.INIT);
   }
 
-  getDestinationObjectById(id) {
-    return this.#destinationObjects.find((dest) => dest.id === id);
+  getDestinationById(id) {
+    return this.#destinations.find((dest) => dest.id === id);
   }
 
-  getOfferObjectsByType(type) {
-    return this.#offerObjects.find((offer) => offer.type === type);
+  getOffersByType(type) {
+    return this.#offers.find((offer) => offer.type === type);
   }
 
-  get offerObjects() {
-    return this.#offerObjects;
+  get offers() {
+    return this.#offers;
   }
 
-  get destinationObjects() {
-    return this.#destinationObjects;
+  get destinations() {
+    return this.#destinations;
   }
 
-  get eventObjects() {
-    return this.#eventObjects;
+  get events() {
+    return this.#events;
   }
 
   async updateEvent(updateType, update) {
-    const index = this.#eventObjects.findIndex(
+    const index = this.#events.findIndex(
       (event) => event.id === update.id
     );
 
@@ -57,10 +57,10 @@ export default class EventsModel extends Observable {
     try {
       const response = await this.#eventsApiService.updateEvent(update);
       const updatedEvent = this.#adaptToClient(response);
-      this.#eventObjects = [
-        ...this.#eventObjects.slice(0, index),
+      this.#events = [
+        ...this.#events.slice(0, index),
         updatedEvent,
-        ...this.#eventObjects.slice(index + 1),
+        ...this.#events.slice(index + 1),
       ];
       this._notify(updateType, updatedEvent);
     } catch (err) {
@@ -72,7 +72,7 @@ export default class EventsModel extends Observable {
     try {
       const response = await this.#eventsApiService.addEvent(update);
       const newEvent = this.#adaptToClient(response);
-      this.#eventObjects = [newEvent, ...this.#eventObjects];
+      this.#events = [newEvent, ...this.#events];
       this._notify(updateType, newEvent);
     } catch (err) {
       throw new Error('Can\'t add task');
@@ -80,7 +80,7 @@ export default class EventsModel extends Observable {
   }
 
   async deleteEvent(updateType, update) {
-    const index = this.#eventObjects.findIndex(
+    const index = this.#events.findIndex(
       (event) => event.id === update.id
     );
 
@@ -90,9 +90,9 @@ export default class EventsModel extends Observable {
 
     try {
       await this.#eventsApiService.deleteEvent(update);
-      this.#eventObjects = [
-        ...this.#eventObjects.slice(0, index),
-        ...this.#eventObjects.slice(index + 1),
+      this.#events = [
+        ...this.#events.slice(0, index),
+        ...this.#events.slice(index + 1),
       ];
       this._notify(updateType);
     } catch (err) {

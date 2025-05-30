@@ -1,4 +1,4 @@
-import { TYPES_FILTER, UpdateType } from '../const';
+import { TypesFilter, UpdateType } from '../const';
 import { remove, render, replace } from '../framework/render';
 import { filter } from '../utils/filter';
 import TripFiltersView from '../view/trip-filters/trip-filters-view';
@@ -19,9 +19,9 @@ export default class FilterPresenter {
   }
 
   get filters() {
-    const events = this.#eventsModel.eventObjects;
+    const events = this.#eventsModel.events;
 
-    return Object.values(TYPES_FILTER).map((type) => ({
+    return Object.values(TypesFilter).map((type) => ({
       type,
       count: filter[type](events).length,
     }));

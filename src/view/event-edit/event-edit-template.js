@@ -1,6 +1,6 @@
 import { capitalize } from '../../utils/common';
 import { getFormattedDate, getFormattedTime } from '../../utils/date-time';
-import { TYPES_EVENT, UserAction } from '../../const';
+import { TypesEvent, UserAction } from '../../const';
 
 function createTypeEventTemplate(type, isDisabled, checked = false) {
   const isChecked = checked ? 'checked' : '';
@@ -59,7 +59,7 @@ function createEventEditTemplate(point, destinations, offers, userAction) {
   const eventFinishDateTime = !dateTo ?
     '' : `${getFormattedDate(dateTo, 'DD/MM/YY')} ${getFormattedTime(dateTo)}`;
 
-  const typeEventTemplate = Object.values(TYPES_EVENT)
+  const typeEventTemplate = Object.values(TypesEvent)
     .map((type) =>
       type === pointType
         ? createTypeEventTemplate(type, isDisabled, true)
